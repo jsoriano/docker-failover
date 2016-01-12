@@ -2,7 +2,7 @@
 
 FROM fedora:21
 
-MAINTAINER Yury Kavaliou <Yury_Kavaliou@epam.com>
+MAINTAINER Jaime Soriano <jsoriano@tuenti.com>
 
 RUN yum install -y keepalived
 
