@@ -17,12 +17,18 @@ SERVICE_IP=${SERVICE_IP:-127.0.0.1}
 INTERFACE=${INTERFACE:-eth0}
 STATE=${INSTANCE_STATE:-BACKUP}
 PRIORITY=${INSTANCE_PRIORITY:-100}
+CHECK_INTERVAL=${CHECK_INTERVAL:-2}
+CHECK_TIMEOUT=${CHECK_TIMEOUT:-2}
+CHECK_RISE=${CHECK_RISE:-15}
 
 if [ -n "$SERVICE_PORT" ]; then
 cat>/etc/keepalived/keepalived.conf<<EOF
-vrrp_script chk_haproxy {
-  script "</dev/tcp/${SERVICE_IP}/${SERVICE_PORT}"
-  interval 2
+vrrp_script chk_service {
+  script "nc -z ${SERVICE_IP} ${SERVICE_PORT}"
+  # script "</dev/tcp/${SERVICE_IP}/${SERVICE_PORT}"
+  interval ${CHECK_INTERVAL}
+  timeout ${CHECK_TIMEOUT}
+  rise ${CHECK_RISE}
   weight 50
 }
 
@@ -35,7 +41,7 @@ vrrp_instance VI_1 {
     ${VIRTUAL_IP}
   }
   track_script {
-    chk_haproxy
+    chk_service
   }
 }
 EOF
@@ -55,4 +61,4 @@ fi
 
 # Init failover config
 
-keepalived --dont-fork --log-console
+exec keepalived --dont-fork --log-console

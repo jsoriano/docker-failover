@@ -21,3 +21,12 @@ A simple keepalived container to provide a VIP on docker containers.
 `INTERFACE`: Default: eth0
 
 `INSTANCE_STATE`: Default: BACKUP
+
+`CHECK_INTERVAL`: Default: 2
+
+`CHECK_TIMEOUT`: Default: 2
+
+`CHECK_RISE`: Default: 15, relatively high default so it doesn't preempt back too fast
+
+
+Copied from https://github.com/jsoriano/docker-failover
